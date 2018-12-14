@@ -1,0 +1,8 @@
+{
+  "name": "scrape_listings",
+  "version": "0.0.1",
+  "dependencies": {
+    "chrono-node": "^1.3.5",
+    "puppeteer": "^1.11.0"
+  }
+}
