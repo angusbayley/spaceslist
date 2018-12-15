@@ -1,4 +1,26 @@
 const puppeteer = require('puppeteer');
+const chrono = require('chrono-node');
+
+
+function parseTime(timeText) {
+    let parsedTime;
+    if (chrono.parse(timeText).length > 0) {
+        parsedTime = chrono.parse(timeText)[0].start.date();
+    }
+    else {
+        let d = new Date();
+        if (timeText.indexOf("hr") >= 0) {
+            let hrDiff = timeText.match(/[0-9]+/)[0];
+            d.setHours(d.getHours() - hrDiff);
+        }
+        else if (timeText.indexOf("min") >= 0) {
+            let minDiff = timeText.match(/[0-9]+/)[0];
+            d.setMinutes(d.getMinutes() - minDiff);
+        }
+        parsedTime = chrono.parse(d.toString())[0].start.date();
+    }
+    return parsedTime
+}
 
 async function getPosts(page) {
     postElements = await page.$$('._1dwg');
@@ -18,8 +40,8 @@ async function getPosts(page) {
             console.log("no post title");
             post.title = null;
         }
-        console.log(post.title);
-        post.time = await n.$eval('.timestampContent', n2 => n2.innerText);
+        post.timeText = await n.$eval('.timestampContent', n2 => n2.innerText);
+        post.time = parseTime(post.timeText)
         try {
             post.location = await n.$eval('._l58', n2 => n2.innerText);
         } catch (e) {
@@ -32,7 +54,6 @@ async function getPosts(page) {
             console.log("no price found");
             post.price = null;
         }
-        console.log(post.Title);
         return post;
     }))
     return posts;
