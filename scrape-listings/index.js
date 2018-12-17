@@ -17,12 +17,14 @@ const pgConfig = {
   host: `/cloudsql/${connectionName}`
 };
 
+const scrapedAt = new Date();
+
 // Connection pools reuse connections between invocations,
 // and handle dropped or expired connections automatically.
 let pgPool;
 
 let insertQuery = 'INSERT INTO listings ' +
-                  '(url, posted_at, location, price) ' +
+                  '(url, posted_at, location, price, scraped_at) ' +
                   'VALUES %L ' +
                   'ON CONFLICT DO NOTHING'
 
@@ -57,6 +59,7 @@ async function getPosts(page) {
 
     const posts = await Promise.all(postElements.map(async n => {
         const post = {}
+        post.scrapedAt = scrapedAt
         post.url = await n.$eval('.timestampContent', n2 => n2.parentElement.parentElement.href);
         try {
             post.title = await n.$eval('._l53', n2 => n2.innerText);
@@ -64,8 +67,8 @@ async function getPosts(page) {
             console.log("no post title");
             post.title = null;
         }
-        post.timeText = await n.$eval('.timestampContent', n2 => n2.innerText);
-        post.time = parseTime(post.timeText)
+        post.postedAtText = await n.$eval('.timestampContent', n2 => n2.innerText);
+        post.postedAt = parseTime(post.postedAtText)
         try {
             post.location = await n.$eval('._l58', n2 => n2.innerText);
         } catch (e) {
@@ -93,7 +96,7 @@ exports.scrapeListings = async (req, res) => {
     await browser.close();
 
     let postsValues = posts.map(post => {
-        return [post.url, post.time, post.location, post.price];
+        return [post.url, post.postedAt, post.location, post.price, post.scrapedAt];
     })
     console.log('postsValues coming up:')
     console.log(postsValues)
