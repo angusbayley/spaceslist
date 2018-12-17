@@ -1,6 +1,30 @@
 const puppeteer = require('puppeteer');
 const chrono = require('chrono-node');
+const pg = require('pg');
+const format = require('pg-format');
 
+const connectionName =
+  process.env.INSTANCE_CONNECTION_NAME;
+const dbUser = process.env.SQL_USER;
+const dbPassword = process.env.SQL_PASSWORD;
+const dbName = process.env.SQL_NAME;
+
+const pgConfig = {
+  max: 1,
+  user: dbUser,
+  password: dbPassword,
+  database: dbName,
+  host: `/cloudsql/${connectionName}`
+};
+
+// Connection pools reuse connections between invocations,
+// and handle dropped or expired connections automatically.
+let pgPool;
+
+let insertQuery = 'INSERT INTO listings ' +
+                  '(url, posted_at, location, price) ' +
+                  'VALUES %L ' +
+                  'ON CONFLICT DO NOTHING'
 
 function parseTime(timeText) {
     let parsedTime;
@@ -49,7 +73,7 @@ async function getPosts(page) {
             post.location = null;
         }
         try {
-            post.price = await n.$eval('._l57', n2 => n2.innerText.substr(1) - 0);
+            post.price = await n.$eval('._l57', n2 => parseInt(n2.innerText.substr(1)) || null);
         } catch (e) {
             console.log("no price found");
             post.price = null;
@@ -65,7 +89,25 @@ exports.scrapeListings = async (req, res) => {
     let page = await browser.newPage();
     await page.goto(url);
     const posts = await getPosts(page)
+    console.log(posts.length + ' post objects created')
     await browser.close();
-    // res.set('Content-Type', 'application/json');
-    res.send(posts);
+
+    let postsValues = posts.map(post => {
+        return [post.url, post.time, post.location, post.price];
+    })
+    console.log('postsValues coming up:')
+    console.log(postsValues)
+    const formattedQuery = format(insertQuery, postsValues)
+    console.log('query: ' + formattedQuery)
+
+    if (!pgPool) {
+        pgPool = new pg.Pool(pgConfig);
+    }
+
+    pgPool.query(formattedQuery, (err, results) => {
+      if (err) {
+        throw err
+      }
+      res.send(JSON.stringify(results));
+    })
 };
