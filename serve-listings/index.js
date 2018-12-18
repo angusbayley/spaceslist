@@ -15,7 +15,7 @@ const pgConfig = {
   host: `/cloudsql/${connectionName}`
 };
 
-const extractQuery = "SELECT url, posted_at, location, price FROM listings LIMIT 5;"
+const extractQuery = "SELECT url, posted_at, location, price FROM listings LIMIT 100;"
 
 if (!pgPool) {
     pgPool = new pg.Pool(pgConfig);
