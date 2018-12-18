@@ -48,6 +48,14 @@ function parseTime(timeText) {
     return parsedTime
 }
 
+function trimUrl(url) {
+    let queryStringIndex = url.indexOf('?');
+    if (queryStringIndex < 0) {
+        return url;
+    }
+    return url.substring(0, url.indexOf('?'));
+}
+
 async function getPosts(page) {
     postElements = await page.$$('._1dwg');
 
@@ -60,7 +68,8 @@ async function getPosts(page) {
     const posts = await Promise.all(postElements.map(async n => {
         const post = {}
         post.scrapedAt = scrapedAt
-        post.url = await n.$eval('.timestampContent', n2 => n2.parentElement.parentElement.href);
+        let fullPostUrl = await n.$eval('.timestampContent', n2 => n2.parentElement.parentElement.href);
+        post.url = trimUrl(fullPostUrl)
         try {
             post.title = await n.$eval('._l53', n2 => n2.innerText);
         } catch (e) {
@@ -86,22 +95,39 @@ async function getPosts(page) {
     return posts;
 };
 
+
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+async function keepScrolling(page, scrollCounter) {
+    await page.evaluate(_ => {
+        window.scrollTo(0, document.body.scrollHeight);
+    });
+    scrollCounter++;
+    console.log(scrollCounter);
+    if (scrollCounter < 5) {
+        await timeout(2000);
+        await keepScrolling(page, scrollCounter);
+    } else {
+        return;
+    }
+}
+
 exports.scrapeListings = async (req, res) => {
     const url = "https://www.facebook.com/groups/HWSpaces/";
     const browser = await puppeteer.launch({args: ['--no-sandbox']});
     let page = await browser.newPage();
     await page.goto(url);
-    const posts = await getPosts(page)
-    console.log(posts.length + ' post objects created')
+    await keepScrolling(page, 0);
+    const posts = await getPosts(page);
+    console.log(posts.length + ' post objects created');
     await browser.close();
 
     let postsValues = posts.map(post => {
         return [post.url, post.postedAt, post.location, post.price, post.scrapedAt];
     })
-    console.log('postsValues coming up:')
-    console.log(postsValues)
-    const formattedQuery = format(insertQuery, postsValues)
-    console.log('query: ' + formattedQuery)
+    const formattedQuery = format(insertQuery, postsValues);
 
     if (!pgPool) {
         pgPool = new pg.Pool(pgConfig);
