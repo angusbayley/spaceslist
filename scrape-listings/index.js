@@ -73,7 +73,6 @@ async function getPosts(page) {
         try {
             post.title = await n.$eval('._l53', n2 => n2.innerText);
         } catch (e) {
-            console.log("no post title");
             post.title = null;
         }
         post.postedAtText = await n.$eval('.timestampContent', n2 => n2.innerText);
@@ -81,13 +80,11 @@ async function getPosts(page) {
         try {
             post.location = await n.$eval('._l58', n2 => n2.innerText);
         } catch (e) {
-            console.log("no post location");
             post.location = null;
         }
         try {
             post.price = await n.$eval('._l57', n2 => parseInt(n2.innerText.substr(1)) || null);
         } catch (e) {
-            console.log("no price found");
             post.price = null;
         }
         return post;
@@ -105,11 +102,11 @@ async function keepScrolling(page, scrollCounter) {
         window.scrollTo(0, document.body.scrollHeight);
     });
     scrollCounter++;
-    console.log(scrollCounter);
     if (scrollCounter < 5) {
         await timeout(1000);
         await keepScrolling(page, scrollCounter);
     } else {
+        console.log("scrolled to page bottom " + scrollCounter + " times");
         return;
     }
 }
@@ -121,13 +118,15 @@ exports.scrapeListings = async (req, res) => {
     await page.goto(url);
     await keepScrolling(page, 0);
     const posts = await getPosts(page);
-    console.log(posts.length + ' post objects created');
+    console.log(posts.length + " post objects created");
     await browser.close();
 
     let postsValues = posts.map(post => {
         return [post.url, post.postedAt, post.location, post.price, post.scrapedAt];
     })
     const formattedQuery = format(insertQuery, postsValues);
+
+    console.log("generated INSERT query. Now inserting to the DB");
 
     if (!pgPool) {
         pgPool = new pg.Pool(pgConfig);
@@ -137,6 +136,7 @@ exports.scrapeListings = async (req, res) => {
       if (err) {
         throw err
       }
+      console.log("success");
       res.send(JSON.stringify(results));
     })
 };
