@@ -107,7 +107,7 @@ async function keepScrolling(page, scrollCounter) {
     scrollCounter++;
     console.log(scrollCounter);
     if (scrollCounter < 5) {
-        await timeout(2000);
+        await timeout(1000);
         await keepScrolling(page, scrollCounter);
     } else {
         return;
