@@ -17,7 +17,7 @@ const pgConfig = {
   host: `/cloudsql/${connectionName}`
 };
 
-const scrapedAt = new Date();
+let scrapedAt = new Date();
 
 // Connection pools reuse connections between invocations,
 // and handle dropped or expired connections automatically.
@@ -65,8 +65,8 @@ async function getPosts(page) {
     let postLocation;
     let postPrice;
 
-    const posts = await Promise.all(postElements.map(async n => {
-        const post = {}
+    let posts = await Promise.all(postElements.map(async n => {
+        let post = {}
         post.scrapedAt = scrapedAt
         let fullPostUrl = await n.$eval('.timestampContent', n2 => n2.parentElement.parentElement.href);
         post.url = trimUrl(fullPostUrl)
@@ -113,18 +113,18 @@ async function keepScrolling(page, scrollCounter) {
 
 exports.scrapeListings = async (req, res) => {
     const url = "https://www.facebook.com/groups/HWSpaces/";
-    const browser = await puppeteer.launch({args: ['--no-sandbox']});
+    let browser = await puppeteer.launch({args: ['--no-sandbox']});
     let page = await browser.newPage();
     await page.goto(url);
     await keepScrolling(page, 0);
-    const posts = await getPosts(page);
+    let posts = await getPosts(page);
     console.log(posts.length + " post objects created");
     await browser.close();
 
     let postsValues = posts.map(post => {
         return [post.url, post.postedAt, post.location, post.price, post.scrapedAt];
     })
-    const formattedQuery = format(insertQuery, postsValues);
+    let formattedQuery = format(insertQuery, postsValues);
 
     console.log("generated INSERT query. Now inserting to the DB");
 
