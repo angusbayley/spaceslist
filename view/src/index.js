@@ -3,24 +3,23 @@ Vue.component("page-layout", {
   template: `
     <div class="container">
         <h1>Hackney Wick spaces all-posts-in-one-page megalist 2000!!!!1</h1>
-            <table class="posts">
-                <tr>
-                    <th>give me the link then!!!!</th>
-                    <th>well WHERE IS IT??</th>
-                    <th>cheddar</th>
-                    <th>posted to the internet at</th>
-                </tr>
-                <tr
-                    v-for="item in listings"
-                    v-bind[item]="item"
-                    v-bind[key]="item.url">
-                    <td>{{item.url}}</td>
-                    <td>{{item.location}}</td>
-                    <td>{{item.price}}</td>
-                    <td>{{moment(item.posted_at).fromNow()}}</td>
-                </tr>
-            </table>
-        </div>
+        <table class="posts">
+            <tr>
+                <th>give me the link then!!!!</th>
+                <th>well WHERE IS IT??</th>
+                <th>cheddar</th>
+                <th>posted to the internet at</th>
+            </tr>
+            <tr
+                v-for="item in listings"
+                v-bind[item]="item"
+                v-bind[key]="item.url">
+                <td>{{item.url}}</td>
+                <td>{{item.location}}</td>
+                <td>{{item.price}}</td>
+                <td>{{moment(item.posted_at).fromNow()}}</td>
+            </tr>
+        </table>
     </div>`
 })
 
