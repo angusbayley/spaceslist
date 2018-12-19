@@ -22,7 +22,7 @@ const pgConfig = {
 let pgPool;
 
 let insertQuery = 'INSERT INTO listings ' +
-                  '(url, posted_at, location, price, scraped_at) ' +
+                  '(url, posted_at, location, price, scraped_at, title) ' +
                   'VALUES %L ' +
                   'ON CONFLICT DO NOTHING'
 
@@ -122,7 +122,7 @@ exports.scrapeListings = async (req, res) => {
     await browser.close();
 
     let postsValues = posts.map(post => {
-        return [post.url, post.postedAt, post.location, post.price, post.scrapedAt];
+        return [post.url, post.postedAt, post.location, post.price, post.scrapedAt, post.title];
     })
     console.log("formatting query from inputs " + postsValues)
     let formattedQuery = format(insertQuery, postsValues);
