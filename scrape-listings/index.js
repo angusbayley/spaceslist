@@ -17,8 +17,6 @@ const pgConfig = {
   host: `/cloudsql/${connectionName}`
 };
 
-let scrapedAt = new Date();
-
 // Connection pools reuse connections between invocations,
 // and handle dropped or expired connections automatically.
 let pgPool;
@@ -64,6 +62,8 @@ async function getPosts(page) {
     let postTime;
     let postLocation;
     let postPrice;
+    let scrapedAt = new Date();
+    console.log("scrapedAt: " + scrapedAt);
 
     let posts = await Promise.all(postElements.map(async n => {
         let post = {}
@@ -124,9 +124,11 @@ exports.scrapeListings = async (req, res) => {
     let postsValues = posts.map(post => {
         return [post.url, post.postedAt, post.location, post.price, post.scrapedAt];
     })
+    console.log("formatting query from inputs " + postsValues)
     let formattedQuery = format(insertQuery, postsValues);
 
     console.log("generated INSERT query. Now inserting to the DB");
+    console.log(formattedQuery);
 
     if (!pgPool) {
         pgPool = new pg.Pool(pgConfig);
