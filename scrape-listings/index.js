@@ -136,7 +136,8 @@ exports.scrapeListings = async (req, res) => {
       if (err) {
         throw err
       }
-      console.log("success");
+      console.log("inserted " + results.rowCount + " results:");
+      console.log(results);
       res.send(JSON.stringify(results));
     })
 };
