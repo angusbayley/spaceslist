@@ -25,7 +25,8 @@ if (!pgPool) {
 }
 
 exports.serveListings = async (req, res) => {
-
+    res.set('Access-Control-Allow-Origin', "*")
+    res.set('Access-Control-Allow-Methods', 'GET')
     pgPool.query(extractQuery, (err, results) => {
         if (err) {
             console.error(err);
