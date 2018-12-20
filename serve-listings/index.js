@@ -15,7 +15,7 @@ const pgConfig = {
   host: `/cloudsql/${connectionName}`
 };
 
-const extractQuery = "  SELECT url, posted_at, location, price " +
+const extractQuery = "  SELECT url, posted_at, location, price, title " +
                      "    FROM listings " +
                      "ORDER BY posted_at DESC " +
                      "   LIMIT 100;"
