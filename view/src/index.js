@@ -38,7 +38,6 @@ const app = new Vue({
     methods: {
         getListings() {
             axios({method: "GET", url: this.url}).then(response => {
-                console.log(response)
                 this.completeListings = response.data;
             }, error => {
                 console.log(error)
@@ -56,7 +55,6 @@ const app = new Vue({
         }
     },
     created() {
-        console.log('created called')
         this.getListings()
     }
 })
