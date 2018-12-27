@@ -3,7 +3,7 @@ import axios from 'axios'
 import moment from 'moment'
 
 Vue.component("page-layout", {
-  props: ['listings'],
+  props: ['listings', 'moment'],
   template: `
     <div class="container">
         <h1>Hackney Wick spaces all-posts-in-one-page megalist 2000!!!!1</h1>
@@ -44,6 +44,9 @@ const app = new Vue({
                 console.log(error)
             });
         },
+        moment(date) {
+            return moment(date)
+        }
     },
     computed: {
         listings: function() {
@@ -52,8 +55,8 @@ const app = new Vue({
             })
         }
     },
-    beforeMount() {
-        console.log('beforeMount called')
+    created() {
+        console.log('created called')
         this.getListings()
     }
 })
