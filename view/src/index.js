@@ -14,10 +14,7 @@ Vue.component("page-layout", {
                 <th>cheddar</th>
                 <th>posted to the internet at</th>
             </tr>
-            <tr
-                v-for="item in listings"
-                v-bind[item]="item"
-                v-bind[key]="item.url">
+            <tr v-for="item in listings">
                 <td class="listing-title"><a v-bind:href="item.url">{{item.title || "they couldn't even be BOTHERED to write a title"}}</a></td>
                 <td class="listing-location">{{item.location}}</td>
                 <td>{{item.price}}</td>
