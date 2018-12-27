@@ -2,7 +2,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "moment": "^2.23.0",
-    "vue": "^1.0.7"
+    "vue": "^2.0.0"
   },
   "scripts": {
     "build": "webpack --mode development"
@@ -13,5 +13,6 @@
     "babel-preset-env": "^1.7.0",
     "webpack": "^4.28.2",
     "webpack-cli": "^3.1.2"
-  }
+  },
+  "description": "a sane UI for viewing the listings from the Hackney Wick Spaces fb group"
 }
