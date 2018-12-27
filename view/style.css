@@ -1,0 +1,16 @@
+.listing-location, .listing-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+td {
+    width: 300px;
+}
+
+table {
+    margin: 15px 0;
+    border: 1px solid black;
+    table-layout: fixed;
+    width: 1200px; /* must have this set */
+}
