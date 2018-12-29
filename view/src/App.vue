@@ -1,17 +1,21 @@
 <template>
   <div class="container">
     <h1>Hackney Wick spaces all-posts-in-one-page megalist 2000!!!!1</h1>
-    <vue-slider ref="slider" v-model="priceLimits" v-bind="sliderOptions"></vue-slider>
+    <hr>
+    <div class="slider-container">
+        <h4>Price range</h4>
+        <vue-slider ref="slider" v-model="priceLimits" v-bind="sliderOptions"></vue-slider>    
+    </div>
     <table class="posts">
       <tr>
         <th>what is this</th>
         <th>well WHERE IS IT??</th>
         <th>cheddar</th>
-        <th>posted to the internet at</th>
+        <th>posted</th>
       </tr>
       <tr v-for="item in listings">
-        <td class="listing-title"><a v-bind:href="item.url">{{item.title || "they couldn't even be BOTHERED to write a title"}}</a></td>
-        <td class="listing-location">{{item.location}}</td>
+        <td class="listing-title"><div class="td-inner"><a v-bind:href="item.url">{{item.title || "they couldn't even be BOTHERED to write a title"}}</a></div></td>
+        <td class="listing-location"><div class="td-inner">{{item.location}}</div></td>
         <td>{{item.price}}</td>
         <td>{{moment(item.posted_at).fromNow()}}</td>
       </tr>
