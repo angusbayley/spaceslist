@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <h1>Hackney Wick spaces all-posts-in-one-page megalist 2000!!!!1</h1>
+    <vue-slider ref="slider" v-model="priceLimits" v-bind="sliderOptions"></vue-slider>
     <table class="posts">
       <tr>
         <th>what is this</th>
@@ -22,13 +23,18 @@
 import Vue from 'vue'
 import axios from 'axios'
 import moment from 'moment'
+import vueSlider from 'vue-slider-component'
 
 export default {
   data () {
     return {
       url: "https://europe-west1-hackney-wick-spaces-viewer.cloudfunctions.net/serveListings",
       completeListings: [],
-      priceLimits: {upper: 800, lower: 100}
+      priceLimits: [500, 800],
+      sliderOptions: {
+        min: 0,
+        max: 1200
+      }
     }
   },
   methods: {
@@ -46,12 +52,15 @@ export default {
   computed: {
     listings: function() {
       return this.completeListings.filter(l => {
-        return l.price < this.priceLimits.upper && l.price > this.priceLimits.lower
+        return l.price < this.priceLimits[1] && l.price > this.priceLimits[0]
       })
     }
   },
   created() {
     this.getListings()
+  },
+  components: {
+    vueSlider
   }
 }
 </script>

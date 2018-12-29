@@ -1,16 +1,18 @@
-.listing-location, .listing-title {
+td {
+    min-width: 100px;
+    max-width: 300px;
+    padding: 5px;
+    height: 30px;
+}
+
+.td-inner {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-td {
-    width: 300px;
-}
-
 table {
     margin: 15px 0;
     border: 1px solid black;
-    table-layout: fixed;
-    width: 1200px; /* must have this set */
+    width: 800px;
 }
