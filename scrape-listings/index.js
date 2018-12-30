@@ -22,7 +22,7 @@ const pgConfig = {
 let pgPool;
 
 let insertQuery = 'INSERT INTO listings ' +
-                  '(url, posted_at, location, price, scraped_at, title) ' +
+                  '(url, posted_at, location, price, scraped_at, title, description, sublet) ' +
                   'VALUES %L ' +
                   'ON CONFLICT DO NOTHING'
 
@@ -52,6 +52,16 @@ function trimUrl(url) {
         return url;
     }
     return url.substring(0, url.indexOf('?'));
+}
+
+function isSublet(description) {
+    const subletWords = ["sublet", "sub let", "sub-let", "short term", "short-term"]
+    for (var i=0; i<subletWords.length; i++) {
+        if(description.toLowerCase().indexOf(subletWords[i]) >= 0) {
+            return true;
+        };
+    }
+    return false;
 }
 
 async function getPosts(page) {
@@ -87,6 +97,26 @@ async function getPosts(page) {
         } catch (e) {
             post.price = null;
         }
+        try {
+            let descriptionStart = await n.$$eval(".text_exposed_root > p", n2 => {
+                return n2.map(n3 => n3.innerText);
+            });
+            try {
+                let descriptionExpansion = await n.$$eval(".text_exposed_show", n2 => {
+                    return n2.map(n3 => n3.innerText);
+                });
+                post.description = descriptionStart.concat(descriptionExpansion).join(" ");
+            } catch (e) {
+                post.description = descriptionStart.join(" ");
+            }
+        } catch (e) {
+            // TODO - scrappy... need to know exactly why I'm catching this
+            console.log("error in extracting description")
+        }
+        if (!post.description) {
+            post.description = await n.$eval("._5pbx", n2 => n2.innerText);
+        }
+        post.sublet = isSublet(post.description);
         return post;
     }))
     return posts;
@@ -122,7 +152,7 @@ exports.scrapeListings = async (req, res) => {
     await browser.close();
 
     let postsValues = posts.map(post => {
-        return [post.url, post.postedAt, post.location, post.price, post.scrapedAt, post.title];
+        return [post.url, post.postedAt, post.location, post.price, post.scrapedAt, post.title, post.description, post.sublet];
     })
     console.log("formatting query from inputs " + postsValues)
     let formattedQuery = format(insertQuery, postsValues);
