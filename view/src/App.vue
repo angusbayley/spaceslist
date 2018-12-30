@@ -10,12 +10,14 @@
       <tr>
         <th>what is this</th>
         <th>well WHERE IS IT??</th>
+        <th>short-term?</th>
         <th>cheddar</th>
         <th>posted</th>
       </tr>
       <tr v-for="item in listings">
         <td class="listing-title"><div class="td-inner"><a v-bind:href="item.url">{{item.title || "they couldn't even be BOTHERED to write a title"}}</a></div></td>
         <td class="listing-location"><div class="td-inner">{{item.location}}</div></td>
+        <td><div v-if="item.sublet" v-html="'&#x2705;'"></div></td>
         <td>{{item.price}}</td>
         <td>{{moment(item.posted_at).fromNow()}}</td>
       </tr>

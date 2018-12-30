@@ -1,9 +1,13 @@
 td {
-    min-width: 80px;
-    max-width: 350px;
+    min-width: 100px;
+    max-width: 325px;
     padding: 5px;
     height: 25px;
     text-align: center;
+}
+
+td.listing-location {
+    max-width: 200px;
 }
 
 .td-inner {
