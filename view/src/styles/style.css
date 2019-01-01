@@ -1,0 +1,47 @@
+table {
+    margin: 15px 0;
+    border: 1px solid lightgrey;
+    width: 100%;
+    text-align: center;
+}
+
+th {
+    padding: 5px;
+    height: 25px;
+}
+
+a:visited { 
+  color: #551A8B;
+}
+
+td {
+    min-width: 80px;
+    max-width: 325px;
+    padding: 5px;
+    height: 25px;
+}
+
+td.listing-location {
+    max-width: 200px;
+}
+
+.text-truncate {
+    text-align: left;
+}
+
+.container {
+    max-width: 80%;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid lightgrey;
+}
+
+.price-slider-container {
+    margin: 40px 0px 5px 0px;
+}
+
+.price-label {
+    margin: 35px 0px 10px 0px;
+}
