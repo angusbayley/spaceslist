@@ -4,7 +4,7 @@
     <p class="mb-4">All of the posts from the Hackney Wick Spaces facebook group, listed chronologically and filterable by price, as god intended.</p>
     <hr>
     <div class="row">
-        <div class="col-md-2 price-label"><h5>price range (&#xA3;):</h5></div>
+        <div class="col-md-2 price-label"><h5>price range (£):</h5></div>
         <div class="col-md-10 price-slider-container">
           <vue-slider ref="slider" v-model="priceLimits" v-bind="sliderOptions"></vue-slider>
         </div>
