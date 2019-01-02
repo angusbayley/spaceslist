@@ -10,7 +10,8 @@
     "vue-template-compiler": "^2.5.21"
   },
   "scripts": {
-    "build": "webpack --mode development"
+    "build": "webpack --mode production",
+    "build-dev": "webpack --mode development"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.32",
