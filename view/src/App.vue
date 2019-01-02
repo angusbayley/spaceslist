@@ -9,7 +9,7 @@
           <vue-slider ref="slider" v-model="priceLimits" v-bind="sliderOptions"></vue-slider>
         </div>
     </div>
-    <table class="posts">
+    <table class="posts table-responsive-lg">
       <tr>
         <th>what</th>
         <th>where</th>
