@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h1 class="mt-4">Hackney Wick Spaces all-posts-in-one-page megalist</h1>
-    <p class="mb-4">All of the posts from the Hackney Wick Spaces facebook group, listed chronologically and filterable by price, as god intended.</p>
+    <p class="mb-4">All of the posts from the <a href="https://www.facebook.com/groups/HWSpaces/">Hackney Wick Spaces facebook group</a>, listed chronologically and filterable by price, as god intended.</p>
     <hr>
     <div class="row">
         <div class="col-md-2 price-label"><h5>price range (£):</h5></div>
@@ -25,7 +25,8 @@
         <td>{{moment(item.posted_at).fromNow()}}</td>
       </tr>
     </table>
-    <p class="text-center"><em>anything older than this probably isn't still around...</em></p>
+    <p class="text-center text-muted"><em>anything older than this probably isn't still around...</em></p>
+    <p class="mb-4 text-center">Made by <a href="http://disambiguated.angusbayley.com">Angus Bayley</a>. <a href="mailto:hello@angusbayley.com">Feedback welcome</a>.</p>
   </div>
 </template>
 
