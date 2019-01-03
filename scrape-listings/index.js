@@ -114,7 +114,12 @@ async function getPosts(page) {
             console.log("error in extracting description")
         }
         if (!post.description) {
-            post.description = await n.$eval("._5pbx", n2 => n2.innerText);
+            try {
+                post.description = await n.$eval("._5pbx", n2 => n2.innerText);
+            } catch (e) {
+                // TODO - comment why this is happening
+                post.description = null;
+            }
         }
         post.sublet = isSublet(post.description);
         return post;
