@@ -95,7 +95,7 @@ async function getPosts(page) {
             post.location = null;
         }
         try {
-            post.price = await n.$eval('._l57', n2 => parseInt(n2.innerText.substr(1)) || null);
+            post.price = await n.$eval('._l57', n2 => parseInt(n2.innerText.substr(1).replace(',', '')) || null);
         } catch (e) {
             post.price = null;
         }
