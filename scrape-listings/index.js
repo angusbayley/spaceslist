@@ -54,12 +54,14 @@ function trimUrl(url) {
     return url.substring(0, url.indexOf('?'));
 }
 
-function isSublet(description) {
+function isSublet(text) {
     const subletWords = ["sublet", "sub let", "sub-let", "short term", "short-term"]
-    for (var i=0; i<subletWords.length; i++) {
-        if(description.toLowerCase().indexOf(subletWords[i]) >= 0) {
-            return true;
-        };
+    if (text) {
+        for (var i=0; i<subletWords.length; i++) {
+            if(text.toLowerCase().indexOf(subletWords[i]) >= 0) {
+                return true;
+            };
+        }
     }
     return false;
 }
@@ -121,7 +123,7 @@ async function getPosts(page) {
                 post.description = null;
             }
         }
-        post.sublet = isSublet(post.description);
+        post.sublet = isSublet(post.description) || isSublet(post.title);
         return post;
     }))
     return posts;
