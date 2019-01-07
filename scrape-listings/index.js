@@ -55,7 +55,7 @@ function trimUrl(url) {
 }
 
 function isSublet(text) {
-    const subletWords = ["sublet", "sub let", "sub-let", "short term", "short-term"]
+    const subletWords = ["sublet", "sub let", "sub-let", "short term", "short-term", "short let"]
     if (text) {
         for (var i=0; i<subletWords.length; i++) {
             if(text.toLowerCase().indexOf(subletWords[i]) >= 0) {
